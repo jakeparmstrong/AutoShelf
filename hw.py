@@ -23,6 +23,8 @@ def store_btn_handler():
   global shelves
   global free_space_count
   print("Storing Item")
+  if free_space_count == NUM_SHELVES:
+    retrieve_button.state(["!disabled"])
   if free_space_count == 0:
     return False
   else:
@@ -31,6 +33,8 @@ def store_btn_handler():
         #if store_in(spot):
         shelves[idx] = True
         free_space_count -= 1
+        if free_space_count == 0:
+          store_button.state(["disabled"])
         return True
 
 def retrieve_item(item_spot):
@@ -45,7 +49,11 @@ def retrieve_item(item_spot):
 
   for item in shelf_buttons:
     item.grid_remove()
-    store_button.grid()
+  store_button.grid()
+  if free_space_count == NUM_SHELVES:
+    retrieve_button.state(["disabled"])
+  if free_space_count == 1:
+    store_button.state(["!disabled"])
   retrieve_button.grid()
   
 
@@ -82,7 +90,7 @@ root.rowconfigure(0, weight=1)
 root.columnconfigure(0, weight=1)
 root.attributes("-fullscreen", True)
 frm = ttk.Frame(root, padding=10)
-frm.grid(sticky="news")
+frm.grid(column=0, row=NUM_SHELVES, sticky="news")
 init()
 
 
@@ -91,5 +99,6 @@ store_button.grid(column=0, row=0, sticky="news")
 
 retrieve_button = ttk.Button(frm, text="Retrieve Item", command=retrieve_btn_handler)
 retrieve_button.grid(column=0, row=1, sticky="nesw")
+retrieve_button.state(["disabled"])
 #ttk.Button(frm, text="Quit", command=root.destroy).grid(column=0, row=2, sticky="enws")
 root.mainloop()
