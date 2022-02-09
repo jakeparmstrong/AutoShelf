@@ -14,7 +14,7 @@ def init():
   shelf_buttons = []
   for i in range(NUM_SHELVES):
     btn = make_active_btn(i)
-    #btn = ttk.Button(frm, text="Storage Space " + str(i), command=lambda: retrieve_item(i))
+    #btn = ttk.Button(frm, text="Storage Space " + str(i), style='my.TButton', command=lambda: retrieve_item(i))
     btn.grid(column=0, row=i, sticky="news")
     btn.grid_remove()
     shelf_buttons.append(btn)
@@ -58,7 +58,7 @@ def retrieve_item(item_spot):
   
 
 def make_active_btn(idx):
-  b = ttk.Button(frm, text="Storage Space " + str(idx), command=lambda: retrieve_item(idx))
+  b = ttk.Button(frm, text="Storage Space " + str(idx), style='my.TButton', command=lambda: retrieve_item(idx))
   b.grid(column=0, row=idx, sticky="news")
   return b
 
@@ -89,15 +89,17 @@ root = Tk()
 root.rowconfigure(0, weight=1)
 root.columnconfigure(0, weight=1)
 root.attributes("-fullscreen", True)
+s = ttk.Style()
+s.configure('my.TButton', font=('Helvetica', 24))
 frm = ttk.Frame(root, padding=10)
 frm.grid(column=0, row=NUM_SHELVES, sticky="news")
 init()
 
 
-store_button = ttk.Button(frm, text="Store Item", command=store_btn_handler)
+store_button = ttk.Button(frm, text="Store Item", style='my.TButton', command=store_btn_handler)
 store_button.grid(column=0, row=0, sticky="news")
 
-retrieve_button = ttk.Button(frm, text="Retrieve Item", command=retrieve_btn_handler)
+retrieve_button = ttk.Button(frm, text="Retrieve Item", style='my.TButton', command=retrieve_btn_handler)
 retrieve_button.grid(column=0, row=1, sticky="nesw")
 retrieve_button.state(["disabled"])
 #ttk.Button(frm, text="Quit", command=root.destroy).grid(column=0, row=2, sticky="enws")
