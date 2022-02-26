@@ -4,12 +4,12 @@ import time
 # pin constants -- RPI 3B+
 ELECTROMAG = 23 # Pin number for electromagnet relay pin
 
-DC_MOTOR_ENA = 2 
-DC_MOTOR_IN1 = 3 
-DC_MOTOR_IN2 = 4 
+DC_MOTOR_ENA = 2
+DC_MOTOR_IN1 = 3
+DC_MOTOR_IN2 = 4
 
-LIN_ACT_ENA = 15 
-LIN_ACT_IN3 = 16
+LIN_ACT_ENA = 14
+LIN_ACT_IN3 = 15
 LIN_ACT_IN4 = 18
 
 def init():
@@ -110,3 +110,4 @@ init()
 dc_motor_test()
 #lin_act_test()
 #em_test()
+GPIO.cleanup()
