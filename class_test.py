@@ -1,4 +1,5 @@
 from DCMotor import DCMotor
+from Photoresistor import Photoresistor
 from LinearActuator import LinearActuator
 import time
 import RPi.GPIO as GPIO
@@ -11,8 +12,10 @@ LIN_ACT_ENA = 14
 LIN_ACT_IN3 = 15
 LIN_ACT_IN4 = 18
 
+PHOTORES = 17
+
 def dc_class_test():
-    print("DCMotor Class test")
+    print("- DCMotor Class test -")
     dcmotor = DCMotor(DC_MOTOR_ENA, DC_MOTOR_IN1, DC_MOTOR_IN2)
     print("Motor forward")
     dcmotor.fwd()
@@ -24,7 +27,7 @@ def dc_class_test():
     print("DC Motor Class test finished.")
 
 def la_class_test():
-    print("LinearActuator Class test")
+    print("- Linear Actuator Class test -")
     linact = LinearActuator(LIN_ACT_ENA, LIN_ACT_IN3, LIN_ACT_IN4)
     print("LA forward")
     linact.fwd()
@@ -35,6 +38,14 @@ def la_class_test():
     linact.brake()
     print("LinearActuator Class test finished.")
 
+def photoresistor_test():
+    print("- Photoresistor Class Test -")
+    photosensor = Photoresistor(PHOTORES)
+    for i in range(20):
+        photosensor.print_pin_value()
+        time.sleep(0.25)
+    print("Photoresistor Class Test finished.")
 
-dc_class_test()
-la_class_test()
+# dc_class_test() -- pass
+# la_class_test() -- pass
+photoresistor_test()
