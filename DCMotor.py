@@ -12,20 +12,20 @@ class DCMotor:
         GPIO.setup(self.DC_MOTOR_IN2, GPIO.OUT)
     
     def brake(self):
-        GPIO.output(DCMotor.DC_MOTOR_ENA, GPIO.LOW)
-        GPIO.output(DCMotor.DC_MOTOR_IN1, GPIO.LOW)
-        GPIO.output(DCMotor.DC_MOTOR_IN2, GPIO.LOW)
+        GPIO.output(self.DC_MOTOR_ENA, GPIO.LOW)
+        GPIO.output(self.DC_MOTOR_IN1, GPIO.LOW)
+        GPIO.output(self.DC_MOTOR_IN2, GPIO.LOW)
 
     def fwd(self):
         self.brake()
         time.sleep(0.1)
-        GPIO.output(DCMotor.DC_MOTOR_ENA, GPIO.HIGH)
-        GPIO.output(DCMotor.DC_MOTOR_IN1, GPIO.HIGH)
-        GPIO.output(DCMotor.DC_MOTOR_IN2, GPIO.LOW)
+        GPIO.output(self.DC_MOTOR_ENA, GPIO.HIGH)
+        GPIO.output(self.DC_MOTOR_IN1, GPIO.HIGH)
+        GPIO.output(self.DC_MOTOR_IN2, GPIO.LOW)
 
     def bwd(self):
         self.brake()
         time.sleep(0.1)
-        GPIO.output(DCMotor.DC_MOTOR_ENA, GPIO.HIGH)
-        GPIO.output(DCMotor.DC_MOTOR_IN2, GPIO.HIGH)
-        GPIO.output(DCMotor.DC_MOTOR_IN1, GPIO.LOW)
+        GPIO.output(self.DC_MOTOR_ENA, GPIO.HIGH)
+        GPIO.output(self.DC_MOTOR_IN2, GPIO.HIGH)
+        GPIO.output(self.DC_MOTOR_IN1, GPIO.LOW)
