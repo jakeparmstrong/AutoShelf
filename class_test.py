@@ -49,3 +49,4 @@ def photoresistor_test():
 # dc_class_test() -- pass
 # la_class_test() -- pass
 photoresistor_test()
+GPIO.cleanup()
