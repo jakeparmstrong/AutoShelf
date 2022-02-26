@@ -1,5 +1,7 @@
 import RPi.GPIO as GPIO
 import time
+import DCMotor
+import LinearActuator
 
 # pin constants -- RPI 3B+
 ELECTROMAG = 23 # Pin number for electromagnet relay pin
@@ -81,6 +83,7 @@ def lin_act_off():
     GPIO.output(LIN_ACT_IN3, GPIO.LOW)
     GPIO.output(LIN_ACT_IN4, GPIO.LOW)
 
+
 def dc_motor_test():
     print("Motor forward")
     dc_motor_fwd()
@@ -119,7 +122,8 @@ def photoresistor_test():
 
 init()
 #dc_motor_test() -- pass
-photoresistor_test()
+#photoresistor_test()
 #lin_act_test() -- untested
 #em_test() -- untested
+dc_class_test()
 GPIO.cleanup()
