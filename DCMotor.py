@@ -10,6 +10,9 @@ class DCMotor:
         GPIO.setup(self.DC_MOTOR_ENA, GPIO.OUT) 
         GPIO.setup(self.DC_MOTOR_IN1, GPIO.OUT) 
         GPIO.setup(self.DC_MOTOR_IN2, GPIO.OUT)
+        print("ENA1 pin: %s" % (self.DC_MOTOR_ENA))
+        print("IN1 pin: %s" % (self.DC_MOTOR_IN1))
+        print("IN2 pin: %s" % (self.DC_MOTOR_IN2))
     
     def brake(self):
         GPIO.output(self.DC_MOTOR_ENA, GPIO.LOW)
