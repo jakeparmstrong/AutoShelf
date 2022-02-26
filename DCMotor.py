@@ -17,14 +17,14 @@ class DCMotor:
         GPIO.output(DCMotor.DC_MOTOR_IN2, GPIO.LOW)
 
     def fwd(self):
-        DCMotor.dc_motor_off()
+        DCMotor.brake()
         time.sleep(0.1)
         GPIO.output(DCMotor.DC_MOTOR_ENA, GPIO.HIGH)
         GPIO.output(DCMotor.DC_MOTOR_IN1, GPIO.HIGH)
         GPIO.output(DCMotor.DC_MOTOR_IN2, GPIO.LOW)
 
     def bwd(self):
-        DCMotor.dc_motor_off()
+        DCMotor.brake()
         time.sleep(0.1)
         GPIO.output(DCMotor.DC_MOTOR_ENA, GPIO.HIGH)
         GPIO.output(DCMotor.DC_MOTOR_IN2, GPIO.HIGH)
