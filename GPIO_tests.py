@@ -12,6 +12,8 @@ LIN_ACT_ENA = 14
 LIN_ACT_IN3 = 15
 LIN_ACT_IN4 = 18
 
+PHOTORES = 17
+
 def init():
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(ELECTROMAG, GPIO.OUT) 
@@ -23,6 +25,8 @@ def init():
     GPIO.setup(LIN_ACT_ENA, GPIO.OUT) 
     GPIO.setup(LIN_ACT_IN3, GPIO.OUT) 
     GPIO.setup(LIN_ACT_IN4, GPIO.OUT) 
+
+    GPIO.setup(PHOTORES, GPIO.IN) 
 
 def electromagnet_on():
     GPIO.output(ELECTROMAG, GPIO.HIGH)
@@ -106,8 +110,16 @@ def em_test():
     electromagnet_off()
     print("Finished electromagnet relay test")
 
+def photoresistor_test():
+    print("Photoresistor Test")
+    for i in range(0,5):
+        reading = GPIO.input(PHOTORES)
+        print("Reading #" + str(i) + ": " + str(reading))
+    print("Finished Photoresistor Test.")
+
 init()
-dc_motor_test()
-#lin_act_test()
-#em_test()
+#dc_motor_test() -- pass
+photoresistor_test()
+#lin_act_test() -- untested
+#em_test() -- untested
 GPIO.cleanup()
