@@ -38,3 +38,4 @@ def la_class_test():
 
 dc_class_test()
 la_class_test()
+GPIO.cleanup()
