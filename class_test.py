@@ -1,6 +1,5 @@
-from statistics import LinearRegression
-import DCMotor
-import LinearActuator
+from DCMotor import DCMotor
+from LinearActuator import LinearActuator
 import time
 import RPi.GPIO as GPIO
 
@@ -35,3 +34,7 @@ def la_class_test():
     time.sleep(5)
     linact.brake()
     print("LinearActuator Class test finished.")
+
+
+dc_class_test()
+la_class_test()
