@@ -11,19 +11,19 @@ class LinearActuator:
         GPIO.setup(self.LIN_ACT_IN3, GPIO.OUT) 
         GPIO.setup(self.LIN_ACT_IN4, GPIO.OUT)
     
-    def brake():
+    def brake(self):
         GPIO.output(LinearActuator.LIN_ACT_ENA, GPIO.LOW)
         GPIO.output(LinearActuator.LIN_ACT_IN3, GPIO.LOW)
         GPIO.output(LinearActuator.LIN_ACT_IN4, GPIO.LOW)
 
-    def fwd():
+    def fwd(self):
         LinearActuator.brake()
         time.sleep(0.1)
         GPIO.output(LinearActuator.LIN_ACT_ENA, GPIO.HIGH)
         GPIO.output(LinearActuator.LIN_ACT_IN3, GPIO.HIGH)
         GPIO.output(LinearActuator.LIN_ACT_IN4, GPIO.LOW)
         
-    def bwd():
+    def bwd(self):
         LinearActuator.brake()
         time.sleep(0.1)
         GPIO.output(LinearActuator.LIN_ACT_ENA, GPIO.HIGH)
