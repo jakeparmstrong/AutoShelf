@@ -1,6 +1,23 @@
 from tkinter import *
 from tkinter import ttk
+from DCMotor import DCMotor
+from GPIO_tests import lin_act_bwd
+from Photoresistor import Photoresistor
+from LinearActuator import LinearActuator
+import time
 
+# Pin defines
+DC_MOTOR_ENA = 2
+DC_MOTOR_IN1 = 3
+DC_MOTOR_IN2 = 4
+
+LIN_ACT_ENA = 14
+LIN_ACT_IN3 = 15
+LIN_ACT_IN4 = 18
+
+PHOTORES = 17
+
+# Constants
 NUM_SHELVES = 3
 
 def init():
@@ -12,6 +29,11 @@ def init():
   free_space_count = NUM_SHELVES
   shelves = [False for i in range(NUM_SHELVES)] # 3 shelves. F for empty, T for full
   shelf_buttons = []
+  global elevator
+  elevator = DCMotor(DC_MOTOR_ENA, DC_MOTOR_IN1, DC_MOTOR_IN2)
+  global lin_act
+  lin_act = LinearActuator(LIN_ACT_ENA, LIN_ACT_IN3, LIN_ACT_IN4)
+
   for i in range(NUM_SHELVES):
     btn = make_active_btn(i)
     #btn = ttk.Button(frm, text="Storage Space " + str(i), style='my.TButton', command=lambda: retrieve_item(i))
@@ -37,6 +59,9 @@ def store_btn_handler():
           store_button.state(["disabled"])
         return True
 
+def elevate_to(floor):
+  pass
+
 def retrieve_item(item_spot):
   global free_space_count
   global shelves
@@ -46,7 +71,7 @@ def retrieve_item(item_spot):
   shelves[item_spot] = False
   free_space_count += 1
   print(shelves)
-
+  
   for item in shelf_buttons:
     item.grid_remove()
   store_button.grid()
