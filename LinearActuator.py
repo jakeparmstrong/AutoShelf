@@ -52,7 +52,7 @@ class LinearActuator:
             if last_encoder_sig != GPIO.input(self.LIN_ACT_SIG):
                 encoder_count += 1
                 last_encoder_sig = (last_encoder_sig + 1) % 2
-            if (time.perf_counter() - start_time) < self.timeout:
+            if (time.perf_counter() - start_time) > self.timeout:
                 print("Timeout on full-extend.")
                 break
         self.brake()
@@ -68,7 +68,7 @@ class LinearActuator:
             if last_encoder_sig != GPIO.input(self.LIN_ACT_SIG):
                 encoder_count += 1
                 last_encoder_sig = (last_encoder_sig + 1) % 2
-            if (time.perf_counter() - start_time) < self.timeout:
+            if (time.perf_counter() - start_time) > self.timeout:
                 print("Timeout on full-retract.")
                 break
         self.brake()

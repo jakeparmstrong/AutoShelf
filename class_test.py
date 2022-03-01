@@ -13,6 +13,7 @@ DC_MOTOR_IN2 = 4
 LIN_ACT_ENA = 14
 LIN_ACT_IN3 = 15
 LIN_ACT_IN4 = 18
+LIN_ACT_SIG = 23
 
 PHOTORES = 17
 HE_SENSOR = 17
@@ -33,7 +34,7 @@ def dc_class_test():
 
 def la_class_test():
     print("- Linear Actuator Class test -")
-    linact = LinearActuator(LIN_ACT_ENA, LIN_ACT_IN3, LIN_ACT_IN4)
+    linact = LinearActuator(LIN_ACT_ENA, LIN_ACT_IN3, LIN_ACT_IN4, LIN_ACT_SIG)
     print("LA forward")
     linact.fwd()
     time.sleep(5)
@@ -56,7 +57,7 @@ def electromagnet_test():
         em.on()
         input("Push enter to turn off electromagnet.")
         print("Electromagnet OFF")
-        val = input("To run test again, press 'y' and then enter. To end test, push enter:")
+        val = input("To run test again, press 'y' and then enter. To end test, push enter only:")
         do_again = True if val == 'y' else False
     print("Electromagnet Class Test finished.")
 
@@ -68,7 +69,7 @@ def hall_effect_sensor_test():
         for i in range(20):
             hes.print_pin_value()
             time.sleep(0.25)
-        val = input("To run test again, press 'y' and then enter. To end test, push enter:")
+        val = input("To run test again, press 'y' and then enter. To end test, push enter only:")
         do_again = True if val == 'y' else False
     print("Hall Effect Sensor Class Test finished.")
 
@@ -87,7 +88,7 @@ print("DCMotor: 'd'")
 print("Photoresistor: 'p'")
 print("Electromagnet: 'e'")
 print("HallEffectSensor: 'h'")
-whichtest = input("Select test(s) to run")
+whichtest = input("Select test(s) to run: ")
 if 'l' in whichtest:
     la_class_test()
 if 'd' in whichtest:
