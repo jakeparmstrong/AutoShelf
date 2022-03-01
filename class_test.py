@@ -1,6 +1,8 @@
 from DCMotor import DCMotor
 from Photoresistor import Photoresistor
 from LinearActuator import LinearActuator
+from Electromagnet import Electromagnet
+from HallEffectSensor import HallEffectSensor
 import time
 import RPi.GPIO as GPIO
 
@@ -13,6 +15,9 @@ LIN_ACT_IN3 = 15
 LIN_ACT_IN4 = 18
 
 PHOTORES = 17
+HE_SENSOR = 17
+
+ELECTROMAG = 22
 
 def dc_class_test():
     print("- DCMotor Class test -")
@@ -36,7 +41,36 @@ def la_class_test():
     linact.bwd()
     time.sleep(5)
     linact.brake()
+    print("Extending Fully")
+    linact.extend_fully()
+    print("Retracting Fully")
+    linact.retract_fully()
     print("LinearActuator Class test finished.")
+
+def electromagnet_test():
+    em = Electromagnet(ELECTROMAG)
+    do_again = True
+    while do_again == True:
+        input("Push enter to turn on electromagnet.")
+        print("Electromagnet ON")
+        em.on()
+        input("Push enter to turn off electromagnet.")
+        print("Electromagnet OFF")
+        val = input("To run test again, press 'y' and then enter. To end test, push enter:")
+        do_again = True if val == 'y' else False
+    print("Electromagnet Class Test finished.")
+
+def hall_effect_sensor_test():
+    print("- Hall Effect Sensor Test -")
+    hes = HallEffectSensor(HE_SENSOR)
+    do_again = True
+    while do_again == True:
+        for i in range(20):
+            hes.print_pin_value()
+            time.sleep(0.25)
+        val = input("To run test again, press 'y' and then enter. To end test, push enter:")
+        do_again = True if val == 'y' else False
+    print("Hall Effect Sensor Class Test finished.")
 
 def photoresistor_test():
     print("- Photoresistor Class Test -")
@@ -46,7 +80,28 @@ def photoresistor_test():
         time.sleep(0.25)
     print("Photoresistor Class Test finished.")
 
+
+print("--- Class Unit Test Suite ---")
+print("LinearActuator: 'l'")
+print("DCMotor: 'd'")
+print("Photoresistor: 'p'")
+print("Electromagnet: 'e'")
+print("HallEffectSensor: 'h'")
+whichtest = input("Select test(s) to run")
+if 'l' in whichtest:
+    la_class_test()
+if 'd' in whichtest:
+    dc_class_test()
+if 'p' in whichtest:
+    photoresistor_test()
+if 'e' in whichtest:
+    electromagnet_test()
+if 'h' in whichtest:
+    hall_effect_sensor_test()
+#TODO run new la_class_test() with full extendor (start with smaller value)
+#TODO run hall_effect_sensor_test()
+#TODO run electromagnet_test()
 # dc_class_test() -- pass
-# la_class_test() -- pass
+# la_class_test() -- pass on fwd, bwd, brake
 # photoresistor_test() -- pass with v divider, but needs shining light on it
 GPIO.cleanup()
