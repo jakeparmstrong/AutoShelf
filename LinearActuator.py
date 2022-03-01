@@ -8,7 +8,7 @@ class LinearActuator:
         self.LIN_ACT_IN4 = in4
         self.LIN_ACT_SIG = sig
         self.PULSE_PER_INCH = 11278 #number of encoder pulses per inch for this model
-        self.timeout = 60 # timeout for full extends/retracts in seconds
+        self.timeout = 5 # timeout for full extends/retracts in seconds
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.LIN_ACT_ENA, GPIO.OUT) 

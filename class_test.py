@@ -3,6 +3,7 @@ from Photoresistor import Photoresistor
 from LinearActuator import LinearActuator
 from Electromagnet import Electromagnet
 from HallEffectSensor import HallEffectSensor
+from EnumTypes import Magnet
 import time
 import RPi.GPIO as GPIO
 
@@ -67,7 +68,8 @@ def hall_effect_sensor_test():
     do_again = True
     while do_again == True:
         for i in range(20):
-            hes.print_pin_value()
+            if Magnet(hes.get_pin_value()) == Magnet.NEAR:
+                print("Magnet is close!")
             time.sleep(0.25)
         val = input("To run test again, press 'y' and then enter. To end test, push enter only:")
         do_again = True if val == 'y' else False

@@ -5,7 +5,8 @@ from Electromagnet import Electromagnet
 from HallEffectSensor import HallEffectSensor
 #from Photoresistor import Photoresistor
 from LinearActuator import LinearActuator
-from Direction import Direction
+from EnumTypes import Direction
+from EnumTypes import Magnet
 import time
 
 # Pin defines
@@ -58,7 +59,7 @@ def init():
     shelf_buttons.append(btn)
 
 def go_to_floor(floor, direction):
-  last_he_reading = he_sensor.get_pin_value()  # stores the last hall-effect sensor reading during a floor change
+  last_he_reading = Magnet(he_sensor.get_pin_value())  # stores the last hall-effect sensor reading during a floor change
   global current_floor
 
   if direction == Direction.UP:
@@ -67,18 +68,21 @@ def go_to_floor(floor, direction):
     elevator.bwd()
   else:
     print("ERROR: invalid direction value passed to go_to_floor()!")
+    
+  #TODO remove debug statements
+  print("On floor %s; Final destination is floor %s" % (current_floor, floor))
   
   #spins with motor running, until 
   while current_floor != floor:
-    if he_sensor.get_pin_value() == 1 and last_he_reading == 0:
+    if Magnet(he_sensor.get_pin_value()) == Magnet.NEAR and last_he_reading == Magnet.FAR:
       # got to next floor
       current_floor = (current_floor + 1) if (direction == Direction.UP) else (current_floor - 1)
-      last_he_reading = 1
+      last_he_reading = Magnet.NEAR
       # TODO remove debug
       print("Just arrived at floor %s" % (current_floor))
-    elif he_sensor.get_pin_value() == 0 and last_he_reading == 1:
+    elif Magnet(he_sensor.get_pin_value()) == Magnet.FAR  and last_he_reading == Magnet.NEAR:
       # got out of zone of last noted magnet
-      last_he_reading = 0
+      last_he_reading = Magnet.FAR
       # TODO remove debug
       print("Just got out of zone of last noted magnet")
   elevator.brake()
