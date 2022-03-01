@@ -91,11 +91,11 @@ def extract_box():
 
 def store_item(floor):
   electromagnet.on() # TODO when to do this?
-  go_to_floor(floor)
+  go_to_floor(floor, Direction.UP)
   lin_act.extend_fully()
   electromagnet.off()
   lin_act.retract_fully()
-  go_to_floor(0)
+  go_to_floor(0, Direction.DOWN)
 
 
 def store_btn_handler():

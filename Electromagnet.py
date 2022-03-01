@@ -9,9 +9,11 @@ class Electromagnet:
         print("Electromagnet output pin: %s" % (self.relay_pin))
     
     def on(self):
+        print("Electromagnet turned on")
         GPIO.output(self.relay_pin, GPIO.HIGH)
         time.sleep(0.5) #safety
 
     def off(self):
+        print("Electromagnet turned off")
         GPIO.output(self.relay_pin, GPIO.HIGH)
         time.sleep(0.5) #safety
