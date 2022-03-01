@@ -4,7 +4,7 @@ class DigitalSensor:
     def __init__(self, input_pin_num):
         GPIO.setmode(GPIO.BCM)
         self.input_pin = input_pin_num
-        GPIO.setup(self.input, GPIO.IN) 
+        GPIO.setup(self.input_pin, GPIO.IN) 
 
     def get_pin_value(self):
         return GPIO.input(self.input_pin)

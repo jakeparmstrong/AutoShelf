@@ -48,5 +48,5 @@ def photoresistor_test():
 
 # dc_class_test() -- pass
 # la_class_test() -- pass
-photoresistor_test()
+# photoresistor_test() -- pass with v divider, but needs shining light on it
 GPIO.cleanup()
