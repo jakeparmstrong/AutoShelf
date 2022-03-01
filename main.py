@@ -1,9 +1,11 @@
 from tkinter import *
 from tkinter import ttk
 from DCMotor import DCMotor
-from GPIO_tests import lin_act_bwd
-from Photoresistor import Photoresistor
+from Electromagnet import Electromagnet
+from HallEffectSensor import HallEffectSensor
+#from Photoresistor import Photoresistor
 from LinearActuator import LinearActuator
+from Direction import Direction
 import time
 
 # Pin defines
@@ -14,25 +16,39 @@ DC_MOTOR_IN2 = 4
 LIN_ACT_ENA = 14
 LIN_ACT_IN3 = 15
 LIN_ACT_IN4 = 18
+LIN_ACT_SIG = 23
 
-PHOTORES = 17
+#PHOTORES = 17
+HE_SENSOR = 17
+
+ELECTROMAG = 22
 
 # Constants
 NUM_SHELVES = 3
 
 def init():
-  #initialize some global variables
+  # initialize some global variables
+  # used in UI
   global shelves
   global free_space_count
   global shelf_buttons
   global frm
+  # used in elevation
+  global current_floor # state variable used during vertical movement
+  global magnet_near   # state variable for hall-effect sensor, used during vertical movement
+  current_floor = 0
+  magnet_near = False # TODO maybe set to true?
   free_space_count = NUM_SHELVES
   shelves = [False for i in range(NUM_SHELVES)] # 3 shelves. F for empty, T for full
   shelf_buttons = []
   global elevator
   elevator = DCMotor(DC_MOTOR_ENA, DC_MOTOR_IN1, DC_MOTOR_IN2)
   global lin_act
-  lin_act = LinearActuator(LIN_ACT_ENA, LIN_ACT_IN3, LIN_ACT_IN4)
+  lin_act = LinearActuator(LIN_ACT_ENA, LIN_ACT_IN3, LIN_ACT_IN4, LIN_ACT_SIG)
+  global electromagnet
+  electromagnet = Electromagnet(ELECTROMAG)
+  global he_sensor
+  he_sensor = HallEffectSensor(HE_SENSOR)
 
   for i in range(NUM_SHELVES):
     btn = make_active_btn(i)
@@ -40,6 +56,47 @@ def init():
     btn.grid(column=0, row=i, sticky="news")
     btn.grid_remove()
     shelf_buttons.append(btn)
+
+def go_to_floor(floor, direction):
+  last_he_reading = he_sensor.get_pin_value()  # stores the last hall-effect sensor reading during a floor change
+  global current_floor
+
+  if direction == Direction.UP:
+    elevator.fwd()
+  elif direction == Direction.DOWN:
+    elevator.bwd()
+  else:
+    print("ERROR: invalid direction value passed to go_to_floor()!")
+  
+  #spins with motor running, until 
+  while current_floor != floor:
+    if he_sensor.get_pin_value() == 1 and last_he_reading == 0:
+      # got to next floor
+      current_floor = (current_floor + 1) if (direction == Direction.UP) else (current_floor - 1)
+      last_he_reading = 1
+      # TODO remove debug
+      print("Just arrived at floor %s" % (current_floor))
+    elif he_sensor.get_pin_value() == 0 and last_he_reading == 1:
+      # got out of zone of last noted magnet
+      last_he_reading = 0
+      # TODO remove debug
+      print("Just got out of zone of last noted magnet")
+  elevator.brake()
+
+def extract_box():
+  lin_act.extend_fully()
+  electromagnet.on()
+  lin_act.retract_fully()
+  electromagnet.off() # TODO where to put this?
+
+def store_item(floor):
+  electromagnet.on() # TODO when to do this?
+  go_to_floor(floor)
+  lin_act.extend_fully()
+  electromagnet.off()
+  lin_act.retract_fully()
+  go_to_floor(0)
+
 
 def store_btn_handler():
   global shelves
@@ -57,17 +114,20 @@ def store_btn_handler():
         free_space_count -= 1
         if free_space_count == 0:
           store_button.state(["disabled"])
+        store_item(idx)
         return True
 
-def elevate_to(floor):
-  pass
 
 def retrieve_item(item_spot):
   global free_space_count
   global shelves
   print(shelves)
-  #if retrieve_from(item_spot): //if returns true
   print(item_spot)
+  # retrieve the item
+  go_to_floor(item_spot, Direction.UP)
+  extract_box()
+  go_to_floor(0, Direction.DOWN)
+
   shelves[item_spot] = False
   free_space_count += 1
   print(shelves)
@@ -91,7 +151,7 @@ def retrieve_btn_handler():
   print("Retrieving item")
   global store_button
   global retrieve_button
-  
+
   #hide buttons temporarily
   store_button.grid_remove()
   retrieve_button.grid_remove()
@@ -99,13 +159,9 @@ def retrieve_btn_handler():
     if shelves[idx] == True: #Something is there
       item.state(["!disabled"])  
       item.grid()
-      #make_active_btn(item)
     else: #Nothing is there
-      #b = ttk.Button(frm, text="Storage Space " + str(item))
-      #b.grid(column=0, row=item, sticky="news")
       item.grid()
-      item.state(["disabled"])  
-  #hide buttons, new buttons
+      item.state(["disabled"])
 
 
 root = Tk()
