@@ -45,9 +45,9 @@ class LinearActuator:
         encoder_count = 0
         last_encoder_sig = GPIO.input(self.LIN_ACT_SIG)
         start_time = time.perf_counter()
+        full_length = self.PULSE_PER_INCH * 12
         self.fwd()
         # test using fewer inches
-        full_length = self.PULSE_PER_INCH * 12
         while encoder_count < full_length:
             if last_encoder_sig != GPIO.input(self.LIN_ACT_SIG):
                 encoder_count += 1
@@ -56,18 +56,64 @@ class LinearActuator:
                 print("Timeout on full-extend.")
                 break
         self.brake()
+
+    def test_encoder_fwd(self):
+        print("Testing encoder on linear actuator (forward)")
+        encoder_count = 0
+        last_encoder_sig = GPIO.input(self.LIN_ACT_SIG)
+        full_length = self.PULSE_PER_INCH * 12
+        self.fwd()
+        # test using fewer inches
+        while encoder_count < full_length:
+            if last_encoder_sig != GPIO.input(self.LIN_ACT_SIG):
+                encoder_count += 1
+                last_encoder_sig = (last_encoder_sig + 1) % 2 # 1 -> 0; 0->1 [not reading again in case it changed?]
+            print(last_encoder_sig)
+            #print(encoder_count)
+        self.brake()
+
+    def test_encoder_bwd(self):
+        print("Testing encoder on linear actuator (backward)")
+        encoder_count = 0
+        last_encoder_sig = GPIO.input(self.LIN_ACT_SIG)
+        full_length = self.PULSE_PER_INCH * 12
+        self.bwd()
+        # test using fewer inches
+        while encoder_count < full_length:
+            if last_encoder_sig != GPIO.input(self.LIN_ACT_SIG):
+                encoder_count += 1
+                last_encoder_sig = (last_encoder_sig + 1) % 2 # 1 -> 0; 0->1 [not reading again in case it changed?]
+                #update the last time the encoder moved
+                last_t = time.perf_counter()
+            if (time.perf_counter() - last_t) > self.timeout:
+                # it has been more than [self.timeout] seconds since the encoder changed => we are retracted
+                break
+            # failsafe timeout
+            if (time.perf_counter() - start_time) > self.timeout:
+                print("Timeout on full-retract.")
+                break
+            print(last_encoder_sig)
+            #print(encoder_count)
+        self.brake()
     
     def retract_fully(self):
         encoder_count = 0
         last_encoder_sig = GPIO.input(self.LIN_ACT_SIG)
         self.bwd()
-        start_time = time.perf_counter()
         # test using fewer inches
         full_length = self.PULSE_PER_INCH * 12
+        start_time = time.perf_counter()
+        last_t = start_time
         while encoder_count < full_length:
             if last_encoder_sig != GPIO.input(self.LIN_ACT_SIG):
                 encoder_count += 1
                 last_encoder_sig = (last_encoder_sig + 1) % 2
+                #update the last time the encoder moved
+                last_t = time.perf_counter()
+            if (time.perf_counter() - last_t) > self.timeout:
+                # it has been more than [self.timeout] seconds since the encoder changed => we are retracted
+                break
+            # failsafe timeout
             if (time.perf_counter() - start_time) > self.timeout:
                 print("Timeout on full-retract.")
                 break
