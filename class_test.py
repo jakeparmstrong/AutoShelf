@@ -67,6 +67,7 @@ def electromagnet_test():
         em.on()
         input("Push enter to turn off electromagnet.")
         print("Electromagnet OFF")
+        em.off()
         val = input("To run test again, press 'y' and then enter. To end test, push enter only:")
         do_again = True if val == 'y' else False
     print("Electromagnet Class Test finished.")
