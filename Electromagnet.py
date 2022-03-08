@@ -6,8 +6,9 @@ class Electromagnet:
         GPIO.setmode(GPIO.BCM)
         self.relay_pin = pin
         GPIO.setup(self.relay_pin, GPIO.OUT) 
+        GPIO.output(self.relay_pin, GPIO.LOW)
         print("Electromagnet output pin: %s" % (self.relay_pin))
-    
+
     def on(self):
         print("Electromagnet turned on")
         GPIO.output(self.relay_pin, GPIO.HIGH)
@@ -15,5 +16,6 @@ class Electromagnet:
 
     def off(self):
         print("Electromagnet turned off")
-        GPIO.output(self.relay_pin, GPIO.HIGH)
+        GPIO.output(self.relay_pin, GPIO.LOW)
+#        GPIO.output(self.relay_pin, GPIO.LOW)
         time.sleep(0.5) #safety
