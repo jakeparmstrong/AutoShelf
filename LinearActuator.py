@@ -11,7 +11,7 @@ class LinearActuator:
         self.MOTOR_DRIVER_PWM_FREQUENCY = 1000
         self.MOTOR_DRIVER_PWM_DUTY_CYCLE = 90
         self.timeout = 4 # timeout for full extends/retracts in seconds
-        self.EXTENSION_TIME = 60 # 60 seconds for time-based extension/retraction
+        self.EXTENSION_TIME = 35 # Seconds for time-based extension/retraction
         self.USE_ENCODERS = False # Whether to use encoders when extending/retracting vs hard-coded timer
 
         GPIO.setmode(GPIO.BCM)
