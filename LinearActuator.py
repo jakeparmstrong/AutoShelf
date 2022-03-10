@@ -11,7 +11,8 @@ class LinearActuator:
         self.MOTOR_DRIVER_PWM_FREQUENCY = 1000
         self.MOTOR_DRIVER_PWM_DUTY_CYCLE = 90
         self.timeout = 4 # timeout for full extends/retracts in seconds
-        self.EXTENSION_TIME = 35 # Seconds for time-based extension/retraction
+        self.EXTENSION_TIME = 28 # Seconds for time-based extension
+        self.RETRACTION_TIME = 45 # Seconds for time-based retraction
         self.USE_ENCODERS = False # Whether to use encoders when extending/retracting vs hard-coded timer
 
         GPIO.setmode(GPIO.BCM)
@@ -150,7 +151,7 @@ class LinearActuator:
     def retract_fully_by_time(self):
         start_time = time.perf_counter()
         self.bwd()
-        while (time.perf_counter() - start_time) < self.EXTENSION_TIME:
+        while (time.perf_counter() - start_time) < self.RETRACTION_TIME:
             continue
 
     def retract_fully(self):
