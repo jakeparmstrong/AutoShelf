@@ -11,6 +11,8 @@ class LinearActuator:
         self.MOTOR_DRIVER_PWM_FREQUENCY = 1000
         self.MOTOR_DRIVER_PWM_DUTY_CYCLE = 0.80
         self.timeout = 4 # timeout for full extends/retracts in seconds
+        self.EXTENSION_TIME = 60 # 60 seconds for time-based extension/retraction
+        self.USE_ENCODERS = False # Whether to use encoders when extending/retracting vs hard-coded timer
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.LIN_ACT_ENA, GPIO.OUT) 
@@ -53,7 +55,14 @@ class LinearActuator:
         self.IN3_PWM.stop()
 
     def extend_fully(self):
-        encoder_count = 0
+    	if self.USE_ENCODERS:
+			extend_fully_by_encoder(self)
+        else:
+        	extend_fully_by_time(self)
+        self.brake()
+
+    def extend_fully_by_encoder(self):
+    	encoder_count = 0
         last_encoder_sig = GPIO.input(self.LIN_ACT_SIG)
         print("encoder input = %s" % (GPIO.input(self.LIN_ACT_SIG)))
         start_time = time.perf_counter()
@@ -67,7 +76,12 @@ class LinearActuator:
                 print("Timeout on full-extend.")
                 print(encoder_count)
                 break
-        self.brake()
+
+    def extend_fully_by_time(self):
+    	start_time = time.perf_counter()
+    	self.fwd()
+    	while (time.perf_counter() - start_time) < self.EXTENSION_TIME:
+    		continue
 
     def test_encoder_fwd(self):
         print("Testing encoder on linear actuator (forward)")
@@ -109,6 +123,13 @@ class LinearActuator:
         self.brake()
     
     def retract_fully(self):
+        if self.USE_ENCODERS:
+        	retract_fully_by_encoder(self)
+        else:
+        	retract_fully_by_time(self)
+        self.brake()
+
+    def retract_fully_by_encoder(self):
         encoder_count = 0
         print("encoder input = %s" % (GPIO.input(self.LIN_ACT_SIG)))
         last_encoder_sig = GPIO.input(self.LIN_ACT_SIG)
@@ -132,4 +153,9 @@ class LinearActuator:
                 print("Timeout on full-retract.")
                 print(encoder_count)
                 break
-        self.brake()
+
+    def retract_fully_by_time(self):
+        start_time = time.perf_counter()
+    	self.bwd()
+    	while (time.perf_counter() - start_time) < self.EXTENSION_TIME:
+    		continue
