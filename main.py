@@ -44,6 +44,8 @@ def init():
   shelf_buttons = []
   global elevator
   elevator = DCMotor(DC_MOTOR_ENA, DC_MOTOR_IN1, DC_MOTOR_IN2)
+  # make sure that the elevator doesn't start moving due to some floating pin:
+  elevator.brake()
   global lin_act
   lin_act = LinearActuator(LIN_ACT_ENA, LIN_ACT_IN3, LIN_ACT_IN4, LIN_ACT_SIG)
   global electromagnet
