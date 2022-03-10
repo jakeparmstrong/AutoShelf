@@ -71,7 +71,8 @@ def go_to_floor(floor, direction):
   else:
     print("ERROR: invalid direction value passed to go_to_floor()!")
 
-  time.sleep(2)
+  if floor != current_floor:
+    time.sleep(2)
     
   #TODO remove debug statements
   print("On floor %s; Final destination is floor %s" % (current_floor, floor))
