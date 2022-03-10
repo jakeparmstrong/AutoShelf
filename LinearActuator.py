@@ -9,7 +9,7 @@ class LinearActuator:
         self.LIN_ACT_SIG = sig
         self.PULSE_PER_INCH = 5946 #number of encoder pulses per inch for this model
         self.MOTOR_DRIVER_PWM_FREQUENCY = 1000
-        self.MOTOR_DRIVER_PWM_DUTY_CYCLE = 0.80
+        self.MOTOR_DRIVER_PWM_DUTY_CYCLE = 90
         self.timeout = 4 # timeout for full extends/retracts in seconds
         self.EXTENSION_TIME = 60 # 60 seconds for time-based extension/retraction
         self.USE_ENCODERS = False # Whether to use encoders when extending/retracting vs hard-coded timer
@@ -56,13 +56,13 @@ class LinearActuator:
 
     def extend_fully(self):
     	if self.USE_ENCODERS:
-			extend_fully_by_encoder(self)
+            extend_fully_by_encoder(self)
         else:
-        	extend_fully_by_time(self)
+            extend_fully_by_time(self)
         self.brake()
 
     def extend_fully_by_encoder(self):
-    	encoder_count = 0
+        encoder_count = 0
         last_encoder_sig = GPIO.input(self.LIN_ACT_SIG)
         print("encoder input = %s" % (GPIO.input(self.LIN_ACT_SIG)))
         start_time = time.perf_counter()
@@ -78,10 +78,10 @@ class LinearActuator:
                 break
 
     def extend_fully_by_time(self):
-    	start_time = time.perf_counter()
-    	self.fwd()
-    	while (time.perf_counter() - start_time) < self.EXTENSION_TIME:
-    		continue
+        start_time = time.perf_counter()
+        self.fwd()
+        while (time.perf_counter() - start_time) < self.EXTENSION_TIME:
+    	    continue
 
     def test_encoder_fwd(self):
         print("Testing encoder on linear actuator (forward)")
@@ -124,9 +124,9 @@ class LinearActuator:
     
     def retract_fully(self):
         if self.USE_ENCODERS:
-        	retract_fully_by_encoder(self)
+            retract_fully_by_encoder(self)
         else:
-        	retract_fully_by_time(self)
+            retract_fully_by_time(self)
         self.brake()
 
     def retract_fully_by_encoder(self):
@@ -156,6 +156,6 @@ class LinearActuator:
 
     def retract_fully_by_time(self):
         start_time = time.perf_counter()
-    	self.bwd()
-    	while (time.perf_counter() - start_time) < self.EXTENSION_TIME:
-    		continue
+        self.bwd()
+        while (time.perf_counter() - start_time) < self.EXTENSION_TIME:
+            continue

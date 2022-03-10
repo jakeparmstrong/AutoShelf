@@ -150,8 +150,11 @@ def up_one_floor():
     time.sleep(5)
 
 def extraction_test():
+  dcmotor = DCMotor(DC_MOTOR_ENA, DC_MOTOR_IN1, DC_MOTOR_IN2)
   electromagnet = Electromagnet(ELECTROMAG)
   lin_act = LinearActuator(LIN_ACT_ENA, LIN_ACT_IN3, LIN_ACT_IN4, LIN_ACT_SIG)
+
+  dcmotor.brake()
   electromagnet.on() # TODO when to do this?
   print("Electromagnet on.")
   lin_act.extend_fully()
