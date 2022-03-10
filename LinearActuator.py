@@ -55,7 +55,7 @@ class LinearActuator:
         self.IN3_PWM.stop()
 
     def extend_fully(self):
-    	if self.USE_ENCODERS:
+        if self.USE_ENCODERS:
             extend_fully_by_encoder(self)
         else:
             extend_fully_by_time(self)
@@ -81,7 +81,7 @@ class LinearActuator:
         start_time = time.perf_counter()
         self.fwd()
         while (time.perf_counter() - start_time) < self.EXTENSION_TIME:
-    	    continue
+            continue
 
     def test_encoder_fwd(self):
         print("Testing encoder on linear actuator (forward)")
