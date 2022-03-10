@@ -9,8 +9,8 @@ class LinearActuator:
         self.LIN_ACT_SIG = sig
         self.PULSE_PER_INCH = 5946 #number of encoder pulses per inch for this model
         self.MOTOR_DRIVER_PWM_FREQUENCY = 1000
-        self.MOTOR_DRIVER_PWM_DUTY_CYCLE = 0.90
-        self.timeout = 60 # timeout for full extends/retracts in seconds
+        self.MOTOR_DRIVER_PWM_DUTY_CYCLE = 0.80
+        self.timeout = 4 # timeout for full extends/retracts in seconds
 
         GPIO.setmode(GPIO.BCM)
         GPIO.setup(self.LIN_ACT_ENA, GPIO.OUT) 
@@ -18,7 +18,8 @@ class LinearActuator:
         GPIO.setup(self.LIN_ACT_IN4, GPIO.OUT)
         GPIO.setup(self.LIN_ACT_SIG, GPIO.IN)
 
-        self.ENA_PWM = GPIO.PWM(self.LIN_ACT_ENA, 10000)
+        self.IN3_PWM = GPIO.PWM(self.LIN_ACT_IN3, 10000)
+        self.IN4_PWM = GPIO.PWM(self.LIN_ACT_IN4, 10000)
 
         print("ENA2 pin: %s" % (self.LIN_ACT_ENA))
         print("IN3 pin: %s" % (self.LIN_ACT_IN3))
@@ -26,23 +27,30 @@ class LinearActuator:
         print("SIGNAL pin: %s" % (self.LIN_ACT_SIG))
 
     def brake(self):
-        self.ENA_PWM.stop()
-        GPIO.output(self.LIN_ACT_IN3, GPIO.LOW)
-        GPIO.output(self.LIN_ACT_IN4, GPIO.LOW)
+        GPIO.output(self.LIN_ACT_ENA, GPIO.LOW)
+        self.IN3_PWM.stop()
+        self.IN4_PWM.stop()
 
     def fwd(self):
         self.brake()
         time.sleep(0.1)
-        self.ENA_PWM.start(self.MOTOR_DRIVER_PWM_DUTY_CYCLE)
-        GPIO.output(self.LIN_ACT_IN3, GPIO.HIGH)
-        GPIO.output(self.LIN_ACT_IN4, GPIO.LOW)
+        #self.ENA_PWM.start(self.MOTOR_DRIVER_PWM_DUTY_CYCLE)
+        GPIO.output(self.LIN_ACT_ENA, GPIO.HIGH)
+        self.IN3_PWM.start(self.MOTOR_DRIVER_PWM_DUTY_CYCLE)
+        self.IN4_PWM.stop()
+        #GPIO.output(self.LIN_ACT_IN3, GPIO.HIGH)
+        #GPIO.output(self.LIN_ACT_IN4, GPIO.LOW)
         
     def bwd(self):
         self.brake()
         time.sleep(0.1)
-        self.ENA_PWM.start(self.MOTOR_DRIVER_PWM_DUTY_CYCLE)
-        GPIO.output(self.LIN_ACT_IN4, GPIO.HIGH)
-        GPIO.output(self.LIN_ACT_IN3, GPIO.LOW)
+        #self.ENA_PWM.start(self.MOTOR_DRIVER_PWM_DUTY_CYCLE)
+        #GPIO.output(self.LIN_ACT_IN4, GPIO.HIGH)
+        #GPIO.output(self.LIN_ACT_IN3, GPIO.LOW)
+        
+        GPIO.output(self.LIN_ACT_ENA, GPIO.HIGH)
+        self.IN4_PWM.start(self.MOTOR_DRIVER_PWM_DUTY_CYCLE)
+        self.IN3_PWM.stop()
 
     def extend_fully(self):
         encoder_count = 0
