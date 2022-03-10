@@ -95,6 +95,45 @@ def photoresistor_test():
     print("Photoresistor Class Test finished.")
     GPIO.cleanup()
 
+def up_one_floor():
+    floor = 1
+    hes = HallEffectSensor(HE_SENSOR)
+    elevator = DCMotor(DC_MOTOR_ENA, DC_MOTOR_IN1, DC_MOTOR_IN2)
+    last_he_reading = Magnet(hes.get_pin_value())  # stores the last hall-effect sensor reading during a floor change
+    elevator.fwd()
+    print("Going up")
+    current_floor = 0
+    #spins with motor running, until 
+    while current_floor != floor:
+      if (Magnet(hes.get_pin_value()) == Magnet.NEAR) and (last_he_reading == Magnet.FAR):
+      # got to next floor
+        current_floor = (current_floor + 1)
+        last_he_reading = Magnet.NEAR
+        # TODO remove debug
+        print("Just arrived at floor %s" % (current_floor))
+      elif (Magnet(hes.get_pin_value()) == Magnet.FAR) and (last_he_reading == Magnet.NEAR):
+        # got out of zone of last noted magnet
+        last_he_reading = Magnet.FAR
+        # TODO remove debug
+        print("Just got out of zone of last noted magnet: " + str(current_floor))
+    elevator.brake()
+    time.sleep(5)
+    elevator.bwd()
+    while current_floor != 0:
+      if (Magnet(hes.get_pin_value()) == Magnet.NEAR) and (last_he_reading == Magnet.FAR):
+      # got to next floor
+        current_floor = (current_floor - 1)
+        last_he_reading = Magnet.NEAR
+        # TODO remove debug
+        print("Just arrived at floor %s" % (current_floor))
+      elif (Magnet(hes.get_pin_value()) == Magnet.FAR) and (last_he_reading == Magnet.NEAR):
+        # got out of zone of last noted magnet
+        last_he_reading = Magnet.FAR
+        # TODO remove debug
+        print("Just got out of zone of last noted magnet: " + str(current_floor))
+    elevator.brake()
+    time.sleep(5)
+
 
 print("--- Class Unit Test Suite ---")
 print("LinearActuator: 'l'")
