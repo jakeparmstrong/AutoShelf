@@ -84,7 +84,7 @@ def hall_effect_sensor_test():
     hes = HallEffectSensor(HE_SENSOR)
     do_again = True
     while do_again == True:
-        for i in range(20):
+        for i in range(40):
             if Magnet(hes.get_pin_value()) == Magnet.NEAR:
                 print("Magnet is close!")
             time.sleep(0.25)
@@ -141,6 +141,21 @@ def up_one_floor():
     elevator.brake()
     time.sleep(5)
 
+def extraction_test():
+  electromagnet = Electromagnet(ELECTROMAG)
+  lin_act = LinearActuator(LIN_ACT_ENA, LIN_ACT_IN3, LIN_ACT_IN4, LIN_ACT_SIG)
+  electromagnet.on() # TODO when to do this?
+  print("Electromagnet on.")
+  lin_act.extend_fully()
+  print("Linear actuator extending fully.")
+  electromagnet.off()
+  print("Electromagnet off.")
+  print("Linear actuator off.")
+  time.sleep(5)
+  electromagnet.on()
+  print("Electromagnet on.")
+  lin_act.retract_fully()
+  print("Linear actuator on.")
 
 print("--- Class Unit Test Suite ---")
 print("LinearActuator: 'l'")
@@ -149,6 +164,7 @@ print("DCMotor: 'd'")
 print("Photoresistor: 'p'")
 print("Electromagnet: 'e'")
 print("HallEffectSensor: 'h'")
+print("up_one_floor: 'u'")
 whichtest = input("Select test(s) to run: ")
 if 'l' in whichtest:
     la_class_test()
@@ -162,6 +178,10 @@ if 'h' in whichtest:
     hall_effect_sensor_test()
 if 'c' in whichtest:
     la_encoder_test()
+if 'u' in whichtest:
+    up_one_floor()
+if 'e' in whichtest:
+    extraction_test()
 #TODO run new la_class_test() with full extendor (start with smaller value)
 #TODO run hall_effect_sensor_test()
 #TODO run electromagnet_test()
