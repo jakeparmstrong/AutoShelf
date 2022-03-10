@@ -54,13 +54,6 @@ class LinearActuator:
         self.IN4_PWM.start(self.MOTOR_DRIVER_PWM_DUTY_CYCLE)
         self.IN3_PWM.stop()
 
-    def extend_fully(self):
-        if self.USE_ENCODERS:
-            extend_fully_by_encoder(self)
-        else:
-            extend_fully_by_time(self)
-        self.brake()
-
     def extend_fully_by_encoder(self):
         encoder_count = 0
         last_encoder_sig = GPIO.input(self.LIN_ACT_SIG)
@@ -82,6 +75,13 @@ class LinearActuator:
         self.fwd()
         while (time.perf_counter() - start_time) < self.EXTENSION_TIME:
             continue
+
+    def extend_fully(self):
+        if self.USE_ENCODERS:
+            extend_fully_by_encoder(self)
+        else:
+            extend_fully_by_time(self)
+        self.brake()
 
     def test_encoder_fwd(self):
         print("Testing encoder on linear actuator (forward)")
@@ -121,13 +121,6 @@ class LinearActuator:
             print(last_encoder_sig)
             #print(encoder_count)
         self.brake()
-    
-    def retract_fully(self):
-        if self.USE_ENCODERS:
-            retract_fully_by_encoder(self)
-        else:
-            retract_fully_by_time(self)
-        self.brake()
 
     def retract_fully_by_encoder(self):
         encoder_count = 0
@@ -159,3 +152,10 @@ class LinearActuator:
         self.bwd()
         while (time.perf_counter() - start_time) < self.EXTENSION_TIME:
             continue
+
+    def retract_fully(self):
+        if self.USE_ENCODERS:
+            retract_fully_by_encoder(self)
+        else:
+            retract_fully_by_time(self)
+        self.brake()

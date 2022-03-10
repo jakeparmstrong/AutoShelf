@@ -154,6 +154,7 @@ def extraction_test():
   electromagnet = Electromagnet(ELECTROMAG)
   lin_act = LinearActuator(LIN_ACT_ENA, LIN_ACT_IN3, LIN_ACT_IN4, LIN_ACT_SIG)
 
+  print("Braking motor.")
   dcmotor.brake()
   electromagnet.on() # TODO when to do this?
   print("Electromagnet on.")
