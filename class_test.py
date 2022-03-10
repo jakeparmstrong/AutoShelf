@@ -169,6 +169,12 @@ def extraction_test():
   lin_act.retract_fully()
   print("Linear actuator on.")
 
+def go_down():
+  dcmotor = DCMotor(DC_MOTOR_ENA, DC_MOTOR_IN1, DC_MOTOR_IN2)
+  dcmotor.bwd()
+  while(True):
+      continue
+
 print("--- Class Unit Test Suite ---")
 print("LinearActuator: 'l'")
 print("LinearActuator encoder test: 'c")
@@ -177,6 +183,7 @@ print("Photoresistor: 'p'")
 print("Electromagnet: 'e'")
 print("HallEffectSensor: 'h'")
 print("up_one_floor: 'u'")
+print("DCMotor down: 'z'")
 whichtest = input("Select test(s) to run: ")
 if 'l' in whichtest:
     la_class_test()
@@ -192,8 +199,10 @@ if 'c' in whichtest:
     la_encoder_test()
 if 'u' in whichtest:
     up_one_floor()
-if 'e' in whichtest:
+if 'x' in whichtest:
     extraction_test()
+if 'z' in whichtest:
+    go_down()
 #TODO run new la_class_test() with full extendor (start with smaller value)
 #TODO run hall_effect_sensor_test()
 #TODO run electromagnet_test()
