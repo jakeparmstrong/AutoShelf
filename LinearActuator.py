@@ -78,9 +78,9 @@ class LinearActuator:
 
     def extend_fully(self):
         if self.USE_ENCODERS:
-            extend_fully_by_encoder(self)
+            self.extend_fully_by_encoder()
         else:
-            extend_fully_by_time(self)
+            self.extend_fully_by_time()
         self.brake()
 
     def test_encoder_fwd(self):
@@ -155,7 +155,7 @@ class LinearActuator:
 
     def retract_fully(self):
         if self.USE_ENCODERS:
-            retract_fully_by_encoder(self)
+            self.retract_fully_by_encoder()
         else:
-            retract_fully_by_time(self)
+            self.retract_fully_by_time()
         self.brake()
