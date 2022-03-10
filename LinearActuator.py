@@ -26,7 +26,7 @@ class LinearActuator:
         print("SIGNAL pin: %s" % (self.LIN_ACT_SIG))
 
     def brake(self):
-    	ENA_PWM.stop()
+        ENA_PWM.stop()
         GPIO.output(self.LIN_ACT_IN3, GPIO.LOW)
         GPIO.output(self.LIN_ACT_IN4, GPIO.LOW)
 
