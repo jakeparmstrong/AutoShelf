@@ -26,21 +26,21 @@ class LinearActuator:
         print("SIGNAL pin: %s" % (self.LIN_ACT_SIG))
 
     def brake(self):
-        ENA_PWM.stop()
+        self.ENA_PWM.stop()
         GPIO.output(self.LIN_ACT_IN3, GPIO.LOW)
         GPIO.output(self.LIN_ACT_IN4, GPIO.LOW)
 
     def fwd(self):
         self.brake()
         time.sleep(0.1)
-        ENA_PWM.start(self.MOTOR_DRIVER_PWM_DUTY_CYCLE)
+        self.ENA_PWM.start(self.MOTOR_DRIVER_PWM_DUTY_CYCLE)
         GPIO.output(self.LIN_ACT_IN3, GPIO.HIGH)
         GPIO.output(self.LIN_ACT_IN4, GPIO.LOW)
         
     def bwd(self):
         self.brake()
         time.sleep(0.1)
-        ENA_PWM.start(self.MOTOR_DRIVER_PWM_DUTY_CYCLE)
+        self.ENA_PWM.start(self.MOTOR_DRIVER_PWM_DUTY_CYCLE)
         GPIO.output(self.LIN_ACT_IN4, GPIO.HIGH)
         GPIO.output(self.LIN_ACT_IN3, GPIO.LOW)
 
