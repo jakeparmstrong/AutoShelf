@@ -111,11 +111,15 @@ def up_one_floor():
     print("Going up")
     current_floor = 0
     #spins with motor running, until 
+    hitcount = 0
     while current_floor != floor:
       if (Magnet(hes.get_pin_value()) == Magnet.NEAR) and (last_he_reading == Magnet.FAR):
       # got to next floor
-        current_floor = (current_floor + 1)
-        last_he_reading = Magnet.NEAR
+        if hitcount == 15:
+            current_floor = (current_floor + 1)
+            last_he_reading = Magnet.NEAR
+        else:
+            hitcount += 1
         # TODO remove debug
         print("Just arrived at floor %s" % (current_floor))
       elif (Magnet(hes.get_pin_value()) == Magnet.FAR) and (last_he_reading == Magnet.NEAR):
@@ -126,11 +130,15 @@ def up_one_floor():
     elevator.brake()
     time.sleep(5)
     elevator.bwd()
+    hitcount = 0
     while current_floor != 0:
       if (Magnet(hes.get_pin_value()) == Magnet.NEAR) and (last_he_reading == Magnet.FAR):
       # got to next floor
-        current_floor = (current_floor - 1)
-        last_he_reading = Magnet.NEAR
+        if hitcount == 15:
+            current_floor = (current_floor - 1)
+            last_he_reading = Magnet.NEAR
+        else:
+            hitcount += 1
         # TODO remove debug
         print("Just arrived at floor %s" % (current_floor))
       elif (Magnet(hes.get_pin_value()) == Magnet.FAR) and (last_he_reading == Magnet.NEAR):
