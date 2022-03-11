@@ -1,5 +1,6 @@
 from DCMotor import DCMotor
 from Photoresistor import Photoresistor
+from MomentarySwitch import MomentarySwitch
 from LinearActuator import LinearActuator
 from Electromagnet import Electromagnet
 from HallEffectSensor import HallEffectSensor
@@ -11,13 +12,19 @@ DC_MOTOR_ENA = 2
 DC_MOTOR_IN1 = 3
 DC_MOTOR_IN2 = 4
 
+
 LIN_ACT_ENA = 14
 LIN_ACT_IN3 = 12
 LIN_ACT_IN4 = 18
 LIN_ACT_SIG = 23
 
+#these are all used for floor-sensing
 PHOTORES = -17
 HE_SENSOR = 17
+M_SW = 17
+M_SW_1 = 9
+M_SW_2 = 10
+SENS_OUT = 27
 
 ELECTROMAG = 22
 
@@ -91,6 +98,40 @@ def hall_effect_sensor_test():
         val = input("To run test again, press 'y' and then enter. To end test, push enter only:")
         do_again = True if val == 'y' else False
     print("Hall Effect Sensor Class Test finished.")
+    GPIO.cleanup()
+    
+def m_sw_sensor_test():
+    dcmotor = DCMotor(DC_MOTOR_ENA, DC_MOTOR_IN1, DC_MOTOR_IN2)
+    print("Motor forward")
+    dcmotor.fwd()
+    print("- Momentary Switch Sensor Test -")
+    ms = MomentarySwitch(M_SW)
+    ms_2 = MomentarySwitch(M_SW_2)
+    ms_1 = MomentarySwitch(M_SW_1)
+    GPIO.setup(SENS_OUT, GPIO.OUT) 
+    GPIO.output(SENS_OUT, GPIO.LOW)
+    do_again = True
+    last_val = ms.get_pin_value()
+    while do_again == True:
+        while True:
+            if ms.get_pin_value() == 1:
+                GPIO.output(SENS_OUT, GPIO.HIGH)
+                print("Sensor 0")
+            if ms_1.get_pin_value() == 1:
+                GPIO.output(SENS_OUT, GPIO.HIGH)
+                print("Sensor 1")
+            if ms_2.get_pin_value() == 1:
+                GPIO.output(SENS_OUT, GPIO.HIGH)
+                print("Sensor 2")
+            else:
+                GPIO.output(SENS_OUT, GPIO.LOW)
+                #print()
+                #print("Pin change to " + str(ms.get_pin_value()))
+                #last_val = ms.get_pin_value()
+            #time.sleep(0.25)
+        val = input("To run test again, press 'y' and then enter. To end test, push enter only:")
+        do_again = True if val == 'y' else False
+    print("Momentary Switch Sensor Class Test finished.")
     GPIO.cleanup()
 
 def photoresistor_test():
@@ -183,6 +224,8 @@ print("Photoresistor: 'p'")
 print("Electromagnet: 'e'")
 print("HallEffectSensor: 'h'")
 print("up_one_floor: 'u'")
+print("Extraction test: 'z'")
+print("Momentary switch test: 'm'")
 print("DCMotor down: 'z'")
 whichtest = input("Select test(s) to run: ")
 if 'l' in whichtest:
@@ -203,6 +246,8 @@ if 'x' in whichtest:
     extraction_test()
 if 'z' in whichtest:
     go_down()
+if 'm' in whichtest:
+    m_sw_sensor_test()
 #TODO run new la_class_test() with full extendor (start with smaller value)
 #TODO run hall_effect_sensor_test()
 #TODO run electromagnet_test()
