@@ -2,7 +2,8 @@ from tkinter import *
 from tkinter import ttk
 from DCMotor import DCMotor
 from Electromagnet import Electromagnet
-from HallEffectSensor import HallEffectSensor
+from MomentarySwitch import MomentarySwitch
+#from HallEffectSensor import HallEffectSensor
 #from Photoresistor import Photoresistor
 from LinearActuator import LinearActuator
 from EnumTypes import Direction
@@ -20,7 +21,12 @@ LIN_ACT_IN4 = 18
 LIN_ACT_SIG = 23
 
 #PHOTORES = 17
-HE_SENSOR = 17
+#HE_SENSOR = 17
+
+#Force-sensitive resistor reading pins (used for sensing floor level)
+FSR_0 = 17
+FSR_1 = 9
+FSR_2 = 10
 
 ELECTROMAG = 22
 
@@ -50,8 +56,14 @@ def init():
   lin_act = LinearActuator(LIN_ACT_ENA, LIN_ACT_IN3, LIN_ACT_IN4, LIN_ACT_SIG)
   global electromagnet
   electromagnet = Electromagnet(ELECTROMAG)
-  global he_sensor
-  he_sensor = HallEffectSensor(HE_SENSOR)
+  global fsr_0
+  fsr_0 = MomentarySwitch(FSR_0)
+  global fsr_1
+  fsr_1 = MomentarySwitch(FSR_1)
+  global fsr_2
+  fsr_2 = MomentarySwitch(FSR_2)
+  global fsr_list
+  fsr_list = (fsr_0, fsr_1, fsr_2)
 
   for i in range(NUM_SHELVES):
     btn = make_active_btn(i)
@@ -61,9 +73,10 @@ def init():
     shelf_buttons.append(btn)
 
 def go_to_floor(floor, direction):
-  last_he_reading = Magnet(he_sensor.get_pin_value())  # stores the last hall-effect sensor reading during a floor change
-  global current_floor
-
+  #last_he_reading = Magnet(he_sensor.get_pin_value())  # stores the last hall-effect sensor reading during a floor change
+  #global current_floor
+  global fsr_list
+  wanted_fsr = fsr_list[floor]
   if direction == Direction.UP:
     elevator.fwd()
   elif direction == Direction.DOWN:
@@ -71,25 +84,30 @@ def go_to_floor(floor, direction):
   else:
     print("ERROR: invalid direction value passed to go_to_floor()!")
 
-  if floor != current_floor:
-    time.sleep(2)
+  #if floor != current_floor:
+  #  time.sleep(2)
     
   #TODO remove debug statements
   print("On floor %s; Final destination is floor %s" % (current_floor, floor))
-  
+  while wanted_fsr.get_pin_value() != 1:
+    #TODO remove debug
+    for i in range(3):
+      print(fsr_list[i].get_pin_value())
+    print("~")
+    pass
   #spins with motor running, until 
-  while current_floor != floor:
-    if Magnet(he_sensor.get_pin_value()) == Magnet.NEAR and last_he_reading == Magnet.FAR:
+  #while current_floor != floor:
+  #  if Magnet(he_sensor.get_pin_value()) == Magnet.NEAR and last_he_reading == Magnet.FAR:
       # got to next floor
-      current_floor = (current_floor + 1) if (direction == Direction.UP) else (current_floor - 1)
-      last_he_reading = Magnet.NEAR
+  #    current_floor = (current_floor + 1) if (direction == Direction.UP) else (current_floor - 1)
+  #    last_he_reading = Magnet.NEAR
       # TODO remove debug
-      print("Just arrived at floor %s" % (current_floor))
-    elif Magnet(he_sensor.get_pin_value()) == Magnet.FAR  and last_he_reading == Magnet.NEAR:
-      # got out of zone of last noted magnet
-      last_he_reading = Magnet.FAR
-      # TODO remove debug
-      print("Just got out of zone of last noted magnet")
+  #    print("Just arrived at floor %s" % (current_floor))
+  #  elif Magnet(he_sensor.get_pin_value()) == Magnet.FAR  and last_he_reading == Magnet.NEAR:
+  #    # got out of zone of last noted magnet
+  #    last_he_reading = Magnet.FAR
+  #    # TODO remove debug
+  #    print("Just got out of zone of last noted magnet")
   elevator.brake()
 
 def extract_box():
