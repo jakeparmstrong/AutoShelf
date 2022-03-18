@@ -89,12 +89,22 @@ def go_to_floor(floor, direction):
     
   #TODO remove debug statements
   print("On floor %s; Final destination is floor %s" % (current_floor, floor))
-  while wanted_fsr.get_pin_value() != 1:
+  #--- March 18 code vv
+  hitcount = 0
+  while hitcount < 3:
+    if wanted_fsr.get_pin_value() == 1:
+      hitcount += 1
+    else:
+      hitcount = 0
+  #--- March 18 code ^^
+  #--- March 17 code vv
+  #while wanted_fsr.get_pin_value() != 1:
     #TODO remove debug
-    for i in range(3):
-      print(fsr_list[i].get_pin_value())
-    print("~")
-    pass
+  #  for i in range(3):
+  #    print(fsr_list[i].get_pin_value())
+  #  print("~")
+  #  pass
+  #---- March 17 code ^^
   #spins with motor running, until 
   #while current_floor != floor:
   #  if Magnet(he_sensor.get_pin_value()) == Magnet.NEAR and last_he_reading == Magnet.FAR:
